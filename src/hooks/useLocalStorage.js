@@ -10,8 +10,16 @@ const useLocalStorage = () => {
     []
   );
 
+  const setLocalStorage = useCallback(
+    ({ key = commonConstants.LOCAL_STORAGE_KEY, value }) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    },
+    []
+  );
+
   return {
     getLocalStorage,
+    setLocalStorage,
   };
 };
 

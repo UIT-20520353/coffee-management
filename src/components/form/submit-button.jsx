@@ -2,7 +2,7 @@ import { Button, Form } from "antd";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 
-const SubmitButton = ({ text, className }) => {
+const SubmitButton = ({ text, className = "" }) => {
   return (
     <Form.Item className="w-full">
       <Button
@@ -22,10 +22,6 @@ const SubmitButton = ({ text, className }) => {
 SubmitButton.propTypes = {
   text: PropTypes.string.isRequired,
   className: PropTypes.string,
-};
-
-SubmitButton.defaultProps = {
-  className: "",
 };
 
 export default SubmitButton;

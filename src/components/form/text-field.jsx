@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 
 const TextField = ({
   name,
-  label,
-  autoComplete,
-  className,
-  variant,
-  placeholder,
-  rules,
+  label = null,
+  autoComplete = "off",
+  className = "",
+  variant = "outlined",
+  placeholder = "",
+  rules = [],
 }) => {
   return (
     <Form.Item
@@ -22,7 +22,7 @@ const TextField = ({
         autoComplete={autoComplete}
         variant={variant}
         placeholder={placeholder}
-        className="text-base h-10"
+        className="h-10 text-base"
       />
     </Form.Item>
   );
@@ -36,15 +36,6 @@ TextField.propTypes = {
   variant: PropTypes.string,
   placeholder: PropTypes.string,
   rules: PropTypes.array,
-};
-
-TextField.defaultProps = {
-  label: null,
-  autoComplete: "off",
-  className: "",
-  variant: "outlined",
-  placeholder: "",
-  rules: [],
 };
 
 export default TextField;
