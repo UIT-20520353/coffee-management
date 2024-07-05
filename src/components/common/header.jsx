@@ -1,0 +1,20 @@
+import logo from "@/assets/images/logo.png";
+import { CircleUserRound } from "lucide-react";
+
+const Header = () => {
+  return (
+    <header className="flex items-center justify-between w-full h-20 px-5 border-b border-gray-200 bg-gray-1">
+      <div className="flex items-center">
+        <img src={logo} alt="logo" className="w-20 h-20" />
+        <h3 className="text-lg font-bold text-brown-1">Clover Cafe</h3>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <span className="text-lg font-semibold">Admin</span>
+        <CircleUserRound width={40} height={40} className="cursor-pointer" />
+      </div>
+    </header>
+  );
+};
+
+export default Header;
