@@ -17,9 +17,17 @@ const useLocalStorage = () => {
     []
   );
 
+  const removeLocalStorage = useCallback(
+    (key = commonConstants.LOCAL_STORAGE_KEY) => {
+      localStorage.removeItem(key);
+    },
+    []
+  );
+
   return {
     getLocalStorage,
     setLocalStorage,
+    removeLocalStorage,
   };
 };
 
