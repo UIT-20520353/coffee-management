@@ -21,7 +21,7 @@ const MainLayout = () => {
       <Header />
       <div className="flex items-start w-full">
         <Sidebar />
-        <div className="p-5">
+        <div className="w-full min-h-[calc(100vh-80px)] max-h-[calc(100vh-80px)] main-content bg-[#e9ecef]">
           <Outlet />
         </div>
       </div>
