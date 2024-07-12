@@ -1,7 +1,10 @@
+import authApi from "@/api/authApi";
 import coffee from "@/assets/images/coffee.avif";
 import PasswordField from "@/components/form/password-field";
 import SubmitButton from "@/components/form/submit-button";
 import TextField from "@/components/form/text-field";
+import useHandleAsyncRequest from "@/hooks/useHandleAsyncRequest";
+import useHandleResponseError from "@/hooks/useHandleResponseError";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { Form } from "antd";
 import { useEffect } from "react";
@@ -10,13 +13,25 @@ import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const handleResponseError = useHandleResponseError();
   const { getLocalStorage, setLocalStorage } = useLocalStorage();
 
-  const onLogin = ({ email, password }) => {
-    console.log(email, password);
-    setLocalStorage({ value: email });
-    navigate("/");
-  };
+  useEffect(() => {
+    handleResponseError({ detail: "error.validate.login.invalid-credential" });
+  }, []);
+
+  const [isLoading, onLogin] = useHandleAsyncRequest(
+    async ({ email, password }) => {
+      const { ok, body, errors } = await authApi.login({ email, password });
+      if (ok && body) {
+        setLocalStorage({ value: { accessToken: body.accessToken } });
+        navigate("/");
+      }
+      if (errors) {
+        handleResponseError(errors);
+      }
+    }
+  );
 
   useEffect(() => {
     const accessToken = getLocalStorage();
@@ -60,10 +75,10 @@ const LoginPage = () => {
                   required: true,
                   message: "Vui lòng nhập email",
                 },
-                {
-                  type: "email",
-                  message: "Vui lòng nhập đúng định dạng email",
-                },
+                // {
+                //   type: "email",
+                //   message: "Vui lòng nhập đúng định dạng email",
+                // },
               ]}
             />
             <PasswordField
@@ -78,7 +93,11 @@ const LoginPage = () => {
                 },
               ]}
             />
-            <SubmitButton text="Đăng nhập" className="mt-2" />
+            <SubmitButton
+              text="Đăng nhập"
+              className="mt-2"
+              loading={isLoading}
+            />
           </Form>
         </div>
       </div>

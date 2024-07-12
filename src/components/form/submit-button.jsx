@@ -2,10 +2,17 @@ import { Button, Form } from "antd";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 
-const SubmitButton = ({ text, className = "" }) => {
+const SubmitButton = ({
+  text,
+  className = "",
+  loading = false,
+  disabled = false,
+}) => {
   return (
     <Form.Item className="w-full">
       <Button
+        disabled={disabled}
+        loading={loading}
         htmlType="submit"
         className={clsx(
           "w-full text-base bg-brown-1 hover:!bg-brown-3 duration-300 h-10 font-exo-2",
@@ -22,6 +29,8 @@ const SubmitButton = ({ text, className = "" }) => {
 SubmitButton.propTypes = {
   text: PropTypes.string.isRequired,
   className: PropTypes.string,
+  loading: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 export default SubmitButton;

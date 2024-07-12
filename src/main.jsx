@@ -1,4 +1,5 @@
 import App from "@/App.jsx";
+import "@/config/i18next";
 import "@/scss/app.scss";
 import React from "react";
 import ReactDOM from "react-dom/client";
