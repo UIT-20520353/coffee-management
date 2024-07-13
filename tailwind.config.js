@@ -11,6 +11,11 @@ export default {
         },
         gray: {
           1: "#f9fafb",
+          2: "#fafafa",
+        },
+        red: {
+          1: "#da1e37",
+          2: "#ff4d4f",
         },
       },
     },

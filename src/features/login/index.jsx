@@ -16,13 +16,9 @@ const LoginPage = () => {
   const handleResponseError = useHandleResponseError();
   const { getLocalStorage, setLocalStorage } = useLocalStorage();
 
-  useEffect(() => {
-    handleResponseError({ detail: "error.validate.login.invalid-credential" });
-  }, []);
-
   const [isLoading, onLogin] = useHandleAsyncRequest(
-    async ({ email, password }) => {
-      const { ok, body, errors } = await authApi.login({ email, password });
+    async ({ username, password }) => {
+      const { ok, body, errors } = await authApi.login({ username, password });
       if (ok && body) {
         setLocalStorage({ value: { accessToken: body.accessToken } });
         navigate("/");
@@ -66,19 +62,15 @@ const LoginPage = () => {
             onFinish={onLogin}
           >
             <TextField
-              name="email"
-              label="Email"
+              name="username"
+              label="Username"
               variant="filled"
-              placeholder="Nhập email"
+              placeholder="Nhập username"
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập email",
+                  message: "Vui lòng nhập username",
                 },
-                // {
-                //   type: "email",
-                //   message: "Vui lòng nhập đúng định dạng email",
-                // },
               ]}
             />
             <PasswordField

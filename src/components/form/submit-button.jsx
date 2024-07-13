@@ -7,9 +7,10 @@ const SubmitButton = ({
   className = "",
   loading = false,
   disabled = false,
+  formItemClassname = "",
 }) => {
   return (
-    <Form.Item className="w-full">
+    <Form.Item className={clsx("w-full m-0", formItemClassname)}>
       <Button
         disabled={disabled}
         loading={loading}
@@ -31,6 +32,7 @@ SubmitButton.propTypes = {
   className: PropTypes.string,
   loading: PropTypes.bool,
   disabled: PropTypes.bool,
+  formItemClassname: PropTypes.string,
 };
 
 export default SubmitButton;

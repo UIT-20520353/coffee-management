@@ -13,6 +13,14 @@ i18n.use(initReactI18next).init({
             login: {
               "invalid-credential": "Email hoặc mật khẩu không đúng",
             },
+            user: {
+              "already-exist": "Email đã tồn tại",
+            },
+          },
+          category: {
+            name: {
+              "already-exist": "Tên danh mục đã tồn tại",
+            },
           },
         },
       },

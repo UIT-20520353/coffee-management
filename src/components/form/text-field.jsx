@@ -10,6 +10,7 @@ const TextField = ({
   variant = "outlined",
   placeholder = "",
   rules = [],
+  readOnly = false,
 }) => {
   return (
     <Form.Item
@@ -23,6 +24,7 @@ const TextField = ({
         variant={variant}
         placeholder={placeholder}
         className="h-10 text-base"
+        readOnly={readOnly}
       />
     </Form.Item>
   );
@@ -36,6 +38,7 @@ TextField.propTypes = {
   variant: PropTypes.string,
   placeholder: PropTypes.string,
   rules: PropTypes.array,
+  readOnly: PropTypes.bool,
 };
 
 export default TextField;

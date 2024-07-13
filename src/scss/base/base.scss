@@ -21,3 +21,18 @@
     border-radius: 5px;
   }
 }
+
+.row-warning {
+  background-color: #fae0e4 !important;
+
+  .ant-table-cell-row-hover {
+    background-color: #fae0e4 !important;
+  }
+}
+.row-danger {
+  background-color: #ff99ac !important;
+
+  .ant-table-cell-row-hover {
+    background-color: #ff99ac !important;
+  }
+}

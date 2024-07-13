@@ -1,6 +1,6 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
 import clsx from "clsx";
-import { Blocks, CookingPot, House, LogOut } from "lucide-react";
+import { Blocks, CookingPot, House, LogOut, Menu, Users } from "lucide-react";
 import { useMemo } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -16,20 +16,25 @@ const Sidebar = () => {
         link: "/",
       },
       {
+        label: "Danh mục",
+        icon: <Menu width={24} height={24} />,
+        link: "/categories",
+      },
+      {
         label: "Nguyên liệu",
         icon: <Blocks width={24} height={24} />,
         link: "/ingredients",
+      },
+      {
+        label: "Nhân viên",
+        icon: <Users width={24} height={24} />,
+        link: "/staffs",
       },
       {
         label: "Công thức",
         icon: <CookingPot width={24} height={24} />,
         link: "/recipes",
       },
-      // {
-      //   label: "Tồn kho",
-      //   icon: <Archive width={24} height={24} />,
-      //   link: "/inventory",
-      // },
     ],
     []
   );
