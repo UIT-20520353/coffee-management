@@ -1,6 +1,14 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
 import clsx from "clsx";
-import { Blocks, CookingPot, House, LogOut, Menu, Users } from "lucide-react";
+import {
+  Blocks,
+  CookingPot,
+  House,
+  LogOut,
+  Menu,
+  Users,
+  LandPlot,
+} from "lucide-react";
 import { useMemo } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -29,6 +37,11 @@ const Sidebar = () => {
         label: "Nhân viên",
         icon: <Users width={24} height={24} />,
         link: "/staffs",
+      },
+      {
+        label: "Khu vực",
+        icon: <LandPlot width={24} height={24} />,
+        link: "/areas",
       },
       {
         label: "Công thức",

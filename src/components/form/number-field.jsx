@@ -14,6 +14,7 @@ const NumberField = ({
   readOnly = false,
   thousandSeparator = ",",
   maxLength = 100,
+  disabled = false,
 }) => {
   return (
     <Form.Item
@@ -23,6 +24,7 @@ const NumberField = ({
       rules={rules}
     >
       <NumericFormat
+        disabled={disabled}
         readOnly={readOnly}
         thousandSeparator={thousandSeparator}
         autoComplete={autoComplete}
@@ -33,7 +35,7 @@ const NumberField = ({
           isError
             ? "bg-[#fff2f0] focus:border-red-2 focus-within:border-red-2"
             : "bg-black/[0.06] focus:border-brown-1 focus-within:border-brown-1"
-        } w-full text-base font-exo-2 border border-solid border-transparent outline-none h-10 px-[11px] py-[4px] rounded-md focus:bg-transparent duration-300`}
+        } w-full text-base font-exo-2 border border-solid border-transparent outline-none h-10 px-[11px] py-[4px] rounded-md focus:bg-transparent duration-300 disabled:border-[#d9d9d9] disabled:text-disabled-1 disabled:bg-disabled-2`}
       />
     </Form.Item>
   );
@@ -50,6 +52,7 @@ NumberField.propTypes = {
   readOnly: PropTypes.bool,
   thousandSeparator: PropTypes.string,
   maxLength: PropTypes.number,
+  disabled: PropTypes.bool,
 };
 
 export default NumberField;

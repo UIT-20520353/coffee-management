@@ -3,7 +3,7 @@ import Table from "@/components/table/table";
 import TableDataColumn from "@/components/table/table-data-column";
 import TableHeaderColumn from "@/components/table/table-header-column";
 import useHandleAsyncRequest from "@/hooks/useHandleAsyncRequest";
-import { RoleMapper, StatusMapper, StatusColorMapper } from "@/mappers/staff";
+import { RoleMapper, StatusColorMapper, StatusMapper } from "@/mappers/staff";
 import { Button, Input, Tag } from "antd";
 import { Pencil, Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -16,10 +16,8 @@ const StaffManagement = () => {
   const [pagination, setPagination] = useState({
     page: 1,
   });
-  const [filter, setFilter] = useState({ name: "" });
+  const [filter, setFilter] = useState({ name: "", email: "" });
   const [ingredientList, setIngredientList] = useState({ total: 0, items: [] });
-  const [selectedIngredientForUpdate, setSelectedIngredientForUpdate] =
-    useState(undefined);
 
   const onGet = useCallback(async (page, filter) => {
     const { ok, body, total } = await staffApi.getAllStaffs({
@@ -27,25 +25,13 @@ const StaffManagement = () => {
       page: page - 1,
       sort: "id,asc",
       "name.contains": filter.name || null,
+      "email.contains": filter.email || null,
     });
     if (ok && body) {
       setIngredientList({ items: body, total: total ?? 0 });
     }
   }, []);
   const [pendingIngredients, getAllIngredients] = useHandleAsyncRequest(onGet);
-
-  const onCloseModal = useCallback((type, isReload = false) => {
-    switch (type) {
-      case "update":
-        setSelectedIngredientForUpdate(undefined);
-        break;
-      default:
-        break;
-    }
-    if (isReload) {
-      setPagination((prev) => ({ ...prev, page: 0 }));
-    }
-  }, []);
 
   const onPageChange = useCallback((page) => {
     setPagination((prev) => ({ ...prev, page }));
@@ -113,12 +99,13 @@ const StaffManagement = () => {
               htmlType="button"
               icon={<Pencil size={20} />}
               className="min-w-[44px] min-h-[44px]"
-              onClick={() => setSelectedIngredientForUpdate(record)}
+              onClick={() => navigate(`/staffs/${record.id}`)}
             />
           </div>
         ),
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -145,10 +132,21 @@ const StaffManagement = () => {
 
       <div className="grid w-full grid-cols-3 gap-5 mb-5">
         <div className="flex flex-col items-start col-span-1 gap-2">
+          <span>Email</span>
+          <Input
+            className="h-10 text-base font-exo-2"
+            placeholder="Nhập email"
+            value={filter.email}
+            onChange={(e) =>
+              setFilter((prev) => ({ ...prev, email: e.target.value }))
+            }
+          />
+        </div>
+        <div className="flex flex-col items-start col-span-1 gap-2">
           <span>Họ tên</span>
           <Input
             className="h-10 text-base font-exo-2"
-            placeholder="Nhập tên họ tên"
+            placeholder="Nhập họ tên"
             value={filter.name}
             onChange={(e) =>
               setFilter((prev) => ({ ...prev, name: e.target.value }))

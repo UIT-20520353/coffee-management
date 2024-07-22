@@ -11,6 +11,7 @@ const TextField = ({
   placeholder = "",
   rules = [],
   readOnly = false,
+  disabled = false,
 }) => {
   return (
     <Form.Item
@@ -25,6 +26,7 @@ const TextField = ({
         placeholder={placeholder}
         className="h-10 text-base"
         readOnly={readOnly}
+        disabled={disabled}
       />
     </Form.Item>
   );
@@ -39,6 +41,7 @@ TextField.propTypes = {
   placeholder: PropTypes.string,
   rules: PropTypes.array,
   readOnly: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 export default TextField;

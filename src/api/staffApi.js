@@ -7,6 +7,9 @@ const staffApi = {
   createStaff: (body) => {
     return handleResponse(axiosClient.post("/admin/user", body));
   },
+  getStaffDetail: (id) => {
+    return handleResponse(axiosClient.get(`/admin/user/${id}`));
+  },
 };
 
 export default staffApi;

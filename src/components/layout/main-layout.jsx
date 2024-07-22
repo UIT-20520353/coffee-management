@@ -3,10 +3,13 @@ import Sidebar from "@/components/common/sidebar";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const MainLayout = () => {
   const navigate = useNavigate();
   const { getLocalStorage } = useLocalStorage();
+  const { loading } = useSelector((state) => state.global);
 
   useEffect(() => {
     const accessToken = getLocalStorage();
@@ -17,7 +20,7 @@ const MainLayout = () => {
   }, [getLocalStorage]);
 
   return (
-    <div className="w-full">
+    <div className="relative w-full">
       <Header />
       <div className="flex items-start w-full">
         <Sidebar />
@@ -25,6 +28,12 @@ const MainLayout = () => {
           <Outlet />
         </div>
       </div>
+
+      {!!loading && (
+        <div className="absolute top-0 left-0 flex items-center justify-center w-full h-screen bg-black z-1000 opacity-60">
+          <Loader className="text-white animate-spin" size={52} />
+        </div>
+      )}
     </div>
   );
 };

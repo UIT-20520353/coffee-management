@@ -7,7 +7,7 @@ const useHandleResponseError = () => {
   const { t } = useTranslation("error");
 
   const handleResponseError = useCallback(
-    (error) => {
+    (error, onOk = undefined) => {
       const instance = Modal.error({
         title: (
           <span className="text-base font-bold text-red-1 font-exo-2">
@@ -17,14 +17,20 @@ const useHandleResponseError = () => {
         content: (
           <span className="text-base font-exo-2">{t(error.detail)}</span>
         ),
-        onOk: () => instance.destroy(),
+        onOk: () => {
+          instance.destroy();
+          if (onOk) onOk();
+        },
         centered: true,
         footer: (
           <div className="flex items-center justify-center w-full mt-3">
             <Button
               className="w-32 h-8 text-base font-medium uppercase bg-brown-1 hover:!bg-brown-3 duration-300 font-exo-2"
               type="primary"
-              onClick={() => instance.destroy()}
+              onClick={() => {
+                instance.destroy();
+                if (onOk) onOk();
+              }}
             >
               OK
             </Button>
