@@ -2,7 +2,7 @@ import axiosClient, { handleResponse } from "./axiosClient";
 
 const areaApi = {
   getAllAreas: () => {
-    return handleResponse(axiosClient.get("/api/admin/area"));
+    return handleResponse(axiosClient.get("/admin/area"));
   },
 };
 

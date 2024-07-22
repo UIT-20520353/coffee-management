@@ -26,10 +26,16 @@ instance.interceptors.response.use(
     };
   },
   (error) => {
+    const { data, status } = error.response;
+
+    if (data.status === 401) {
+      localStorage.removeItem(commonConstants.LOCAL_STORAGE_KEY);
+    }
+
     return Promise.reject({
       ok: false,
-      errors: error.response.data,
-      status: error.response.status,
+      errors: data,
+      status,
     });
   }
 );
