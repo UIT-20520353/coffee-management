@@ -2,7 +2,7 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 import clsx from "clsx";
 import {
   Blocks,
-  CookingPot,
+  CupSoda,
   House,
   LogOut,
   Menu,
@@ -44,9 +44,9 @@ const Sidebar = () => {
         link: "/areas",
       },
       {
-        label: "Công thức",
-        icon: <CookingPot width={24} height={24} />,
-        link: "/recipes",
+        label: "Sản phẩm",
+        icon: <CupSoda width={24} height={24} />,
+        link: "/products",
       },
     ],
     []
