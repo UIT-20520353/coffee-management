@@ -9,6 +9,16 @@ i18n.use(initReactI18next).init({
       },
       error: {
         error: {
+          area: {
+            name: {
+              "already-exist": "Tên khu vực đã tồn tại",
+            },
+          },
+          table: {
+            name: {
+              "already-exist": "Tên bàn đã tồn tại",
+            },
+          },
           validate: {
             login: {
               "invalid-credential": "Email hoặc mật khẩu không đúng",

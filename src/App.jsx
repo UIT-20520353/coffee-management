@@ -1,5 +1,6 @@
 import MainLayout from "@/components/layout/main-layout";
 import AreaManagement from "@/features/area";
+import AreaDetail from "@/features/area/pages/area-detail";
 import CategoryManagement from "@/features/category";
 import Dashboard from "@/features/dashboard";
 import IngredientManagement from "@/features/ingredient";
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="staffs/create" element={<CreateStaff />} />
         <Route path="staffs/:id" element={<EditStaff />} />
         <Route path="staffs" element={<StaffManagement />} />
+        <Route path="areas/:id" element={<AreaDetail />} />
         <Route path="areas" element={<AreaManagement />} />
         <Route index element={<Dashboard />} />
       </Route>

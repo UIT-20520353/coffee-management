@@ -17,6 +17,9 @@ export default {
           1: "#da1e37",
           2: "#ff4d4f",
         },
+        green: {
+          1: "#49cc90",
+        },
         disabled: {
           1: "rgba(0, 0, 0, 0.25)",
           2: "rgba(0, 0, 0, 0.04)",

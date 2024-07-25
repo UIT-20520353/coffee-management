@@ -4,7 +4,6 @@ import { useCallback } from "react";
 
 const useHandleResponseSuccess = () => {
   const handleResponseSuccess = useCallback((message, onOk = undefined) => {
-    console.log(onOk);
     const instance = Modal.error({
       title: (
         <span className="text-base font-bold text-[#49cc90] font-exo-2">
@@ -22,7 +21,7 @@ const useHandleResponseSuccess = () => {
       footer: (
         <div className="flex items-center justify-center w-full mt-3">
           <Button
-            className="w-32 h-8 text-base font-medium uppercase bg-brown-1 hover:!bg-brown-3 duration-300 font-exo-2"
+            className="w-32 h-8 text-base font-medium uppercase !bg-green-1 hover:opacity-60 duration-300 font-exo-2"
             type="primary"
             onClick={() => {
               instance.destroy();
