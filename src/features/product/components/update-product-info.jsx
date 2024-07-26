@@ -2,26 +2,25 @@ import NumberField from "@/components/form/number-field";
 import SubmitButton from "@/components/form/submit-button";
 import TextField from "@/components/form/text-field";
 import { Form } from "antd";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-const UpdateProductInfo = ({ onSubmit }) => {
+const UpdateProductInfo = ({ onSubmit, product = undefined }) => {
   const [form] = Form.useForm();
   const [error, setError] = useState({ price: false });
 
   const onFieldsChange = useCallback(() => {
-    const length = form.getFieldValue("recipes")?.length ?? -1;
-    const errorStates = {};
-    for (let i = 0; i < length; i++) {
-      errorStates[`recipes${i}quantity`] =
-        form.getFieldError(["recipes", i, "quantity"]).length > 0;
-    }
-
     setError({
-      ...errorStates,
       price: form.getFieldError("price").length > 0,
     });
   }, [form]);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      name: product?.name || "",
+      price: product?.price || 0,
+    });
+  }, [product, form]);
 
   return (
     <Form
@@ -73,6 +72,10 @@ const UpdateProductInfo = ({ onSubmit }) => {
 
 UpdateProductInfo.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  product: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.oneOf([undefined, null]),
+  ]),
 };
 
 export default UpdateProductInfo;

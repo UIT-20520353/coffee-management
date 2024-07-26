@@ -16,6 +16,9 @@ const productApi = {
   updateProductInfo: (id, body) => {
     return handleResponse(axiosClient.put(`/admin/product/${id}`, body));
   },
+  updateProductRecipe: (id, body) => {
+    return handleResponse(axiosClient.put(`/admin/product/recipe/${id}`, body));
+  },
 };
 
 export default productApi;
