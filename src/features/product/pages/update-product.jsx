@@ -1,4 +1,3 @@
-import categoryApi from "@/api/categoryApi";
 import ingredientApi from "@/api/ingredientApi";
 import productApi from "@/api/productApi";
 import NumberField from "@/components/form/number-field";
@@ -12,13 +11,15 @@ import { Button, Form, Select } from "antd";
 import { ArrowLeft, Minus, Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import UpdateProductInfo from "../components/update-product-info";
 
 const replaceCommaWithEmptyString = (inputString) => {
   return Number(inputString.toString().replace(/,/g, ""));
 };
 
-const CreateProduct = () => {
+const UpdateProduct = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -26,18 +27,10 @@ const CreateProduct = () => {
   const handleResponseError = useHandleResponseError();
   const handleResponseSuccess = useHandleResponseSuccess();
 
-  const [categories, setCategories] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [error, setError] = useState({ price: false });
+  const [product, setProduct] = useState(undefined);
 
-  const categoryOptions = useMemo(
-    () =>
-      categories.map((category) => ({
-        label: category.name,
-        value: category.id,
-      })),
-    [categories]
-  );
   const ingredientOptions = useMemo(
     () =>
       ingredients.map((i) => ({
@@ -85,22 +78,19 @@ const CreateProduct = () => {
     }, [])
   );
 
-  const [pendingGetCategory, getAllCategories] = useHandleAsyncRequest(
+  const [pendingGetProductDetail, getProductDetail] = useHandleAsyncRequest(
     useCallback(async () => {
-      const { ok, body } = await categoryApi.getAllCategories({
-        page: 0,
-        size: 9999,
-      });
+      const { ok, body } = await productApi.getProductDetail(id);
       if (ok && body) {
-        setCategories(body);
+        setProduct(body);
       }
-    }, [])
+    }, [id])
   );
 
-  const [pendingCreateProduct, createProduct] = useHandleAsyncRequest(
+  const [pendingCreate, UpdateProduct] = useHandleAsyncRequest(
     useCallback(
       async (data) => {
-        const { ok, errors } = await productApi.createProduct(data);
+        const { ok, errors } = await productApi.UpdateProduct(data);
         if (ok) {
           handleResponseSuccess("Tạo sản phẩm thành công", () =>
             navigate("/products")
@@ -115,30 +105,88 @@ const CreateProduct = () => {
     )
   );
 
+  const [pendingUpdateProductInfo, updateProductInfo] = useHandleAsyncRequest(
+    useCallback(
+      async (data) => {
+        const { ok, errors } = await productApi.updateProductInfo(id, data);
+        if (ok) {
+          handleResponseSuccess("Cập nhật thông tin sản phẩm thành công", () =>
+            getProductDetail()
+          );
+        }
+        if (errors) {
+          handleResponseError(errors);
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [handleResponseSuccess, handleResponseError, getProductDetail, id]
+    )
+  );
+
   const onSubmit = (data) => {
     if (!data.recipes || data.recipes.length === 0) {
       handleResponseError({
         detail: "error.validate.form.ingredient-required",
       });
     } else {
-      createProduct(conertToBody(data));
+      UpdateProduct(conertToBody(data));
     }
   };
 
-  useEffect(() => {
-    getAllCategories();
-    getAllIngredients();
-  }, [getAllCategories, getAllIngredients]);
+  const onUpdateProductInfo = useCallback(
+    (data) => {
+      updateProductInfo({
+        name: data.name,
+        price: replaceCommaWithEmptyString(data.price),
+        categoryId: product.id,
+      });
+    },
+    [updateProductInfo, product]
+  );
 
   useEffect(() => {
-    dispatch(pendingGetCategory ? incrementLoading() : decrementLoading());
+    getAllIngredients();
+  }, [getAllIngredients]);
+
+  useEffect(() => {
+    if (!id) {
+      navigate("/products");
+    } else {
+      getProductDetail();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, getProductDetail]);
+
+  useEffect(() => {
+    if (product) {
+      product.recipes.forEach((recipe, index) => {
+        form.setFieldValue(["recipes", index, "quantity"], recipe.quantity);
+        form.setFieldValue(
+          ["recipes", index, "ingredientId"],
+          recipe.ingredient.id
+        );
+      });
+
+      form.setFieldsValue({
+        name: product.name,
+        price: product.price,
+      });
+    }
+  }, [product, form]);
+
+  useEffect(() => {
     dispatch(pendingGetIngredient ? incrementLoading() : decrementLoading());
-    dispatch(pendingCreateProduct ? incrementLoading() : decrementLoading());
+    dispatch(pendingCreate ? incrementLoading() : decrementLoading());
+    dispatch(pendingGetProductDetail ? incrementLoading() : decrementLoading());
+    dispatch(
+      pendingUpdateProductInfo ? incrementLoading() : decrementLoading()
+    );
   }, [
-    pendingGetCategory,
     dispatch,
     pendingGetIngredient,
-    pendingCreateProduct,
+    pendingCreate,
+    pendingGetProductDetail,
+    pendingUpdateProductInfo,
   ]);
 
   return (
@@ -157,7 +205,9 @@ const CreateProduct = () => {
         </div>
       </div>
 
-      <Form
+      <UpdateProductInfo />
+
+      {/* <Form
         className="flex flex-col items-start w-full p-5 bg-white rounded-md "
         layout="vertical"
         onFieldsChange={onFieldsChange}
@@ -195,23 +245,6 @@ const CreateProduct = () => {
             isError={error.price}
             thousandSeparator=","
           />
-          <Form.Item
-            label={<span className="text-base font-exo-2">Danh mục</span>}
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng chọn danh mục",
-              },
-            ]}
-            name="categoryId"
-          >
-            <Select
-              options={categoryOptions}
-              placeholder="Chọn danh mục"
-              className="h-10"
-              variant="filled"
-            />
-          </Form.Item>
         </div>
         <Form.List name="recipes">
           {(fields, { add, remove }, { errors }) => (
@@ -288,9 +321,9 @@ const CreateProduct = () => {
             <SubmitButton text="Lưu" className="mt-2" />
           </div>
         </div>
-      </Form>
+      </Form> */}
     </div>
   );
 };
 
-export default CreateProduct;
+export default UpdateProduct;

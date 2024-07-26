@@ -43,7 +43,7 @@ const NumberField = ({
 
 NumberField.propTypes = {
   autoComplete: PropTypes.string,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
   className: PropTypes.string,
   placeholder: PropTypes.string,

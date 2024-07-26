@@ -7,6 +7,15 @@ const productApi = {
   getAllProducts: (params) => {
     return handleResponse(axiosClient.get("/admin/product", { params }));
   },
+  deleteProduct: (id) => {
+    return handleResponse(axiosClient.delete(`/admin/product/${id}`));
+  },
+  getProductDetail: (id) => {
+    return handleResponse(axiosClient.get(`/admin/product/${id}`));
+  },
+  updateProductInfo: (id, body) => {
+    return handleResponse(axiosClient.put(`/admin/product/${id}`, body));
+  },
 };
 
 export default productApi;

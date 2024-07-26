@@ -11,7 +11,7 @@ const useConfirmModal = () => {
             {title}
           </span>
         ),
-        content: <span className="text-base font-exo-2">{message}</span>,
+        content: <p className="text-base text-center font-exo-2">{message}</p>,
         onOk: () => {
           instance.destroy();
           if (onOk) {

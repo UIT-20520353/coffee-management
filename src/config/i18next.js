@@ -26,6 +26,9 @@ i18n.use(initReactI18next).init({
             user: {
               "already-exist": "Email đã tồn tại",
             },
+            form: {
+              "ingredient-required": "Vui lòng thêm nguyên liệu",
+            },
           },
           category: {
             name: {

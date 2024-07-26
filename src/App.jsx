@@ -8,6 +8,7 @@ import InventoryManagement from "@/features/inventory";
 import Login from "@/features/login";
 import ProductManagement from "@/features/product";
 import CreateProduct from "@/features/product/pages/create-product";
+import UpdateProduct from "@/features/product/pages/update-product";
 import StaffManagement from "@/features/staff";
 import CreateStaff from "@/features/staff/pages/create-staff";
 import EditStaff from "@/features/staff/pages/edit-staff";
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="areas/:id" element={<AreaDetail />} />
         <Route path="areas" element={<AreaManagement />} />
         <Route path="products/create" element={<CreateProduct />} />
+        <Route path="products/:id" element={<UpdateProduct />} />
         <Route path="products" element={<ProductManagement />} />
         <Route index element={<Dashboard />} />
       </Route>
