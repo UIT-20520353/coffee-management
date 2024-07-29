@@ -3,6 +3,8 @@ import AreaManagement from "@/features/area";
 import AreaDetail from "@/features/area/pages/area-detail";
 import CategoryManagement from "@/features/category";
 import Dashboard from "@/features/dashboard";
+import ImportManagement from "@/features/import";
+import CreateImport from "@/features/import/pages/create-import";
 import IngredientManagement from "@/features/ingredient";
 import InventoryManagement from "@/features/inventory";
 import Login from "@/features/login";
@@ -30,6 +32,8 @@ const App = () => {
         <Route path="products/create" element={<CreateProduct />} />
         <Route path="products/:id" element={<UpdateProduct />} />
         <Route path="products" element={<ProductManagement />} />
+        <Route path="import/create" element={<CreateImport />} />
+        <Route path="import" element={<ImportManagement />} />
         <Route index element={<Dashboard />} />
       </Route>
     </Routes>

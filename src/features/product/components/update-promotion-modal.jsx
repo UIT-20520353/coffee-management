@@ -16,49 +16,67 @@ const replaceCommaWithEmptyString = (inputString) => {
   return Number(inputString.toString().replace(/,/g, ""));
 };
 
-const CreatePromotionModal = ({ isOpen, onClose, productId }) => {
+const UpdatePromotionModal = ({ promotion, onClose, productId }) => {
   const handleResponseError = useHandleResponseError();
   const handleResponseSuccess = useHandleResponseSuccess();
   const [form] = Form.useForm();
 
   const [error, setError] = useState({ percent: false });
 
-  const [pendingCreate, createPromotion] = useHandleAsyncRequest(
+  const [pendingUpdate, updatePromotion] = useHandleAsyncRequest(
     useCallback(
       async (data) => {
-        const { ok, errors } = await promotionApi.createPromotion({
-          ...data,
-          percent: replaceCommaWithEmptyString(data.percent),
-          productId,
-        });
+        const { ok, errors } = await promotionApi.updatePromotion(
+          promotion?.id,
+          {
+            ...data,
+            percent: replaceCommaWithEmptyString(data.percent),
+            productId,
+          }
+        );
         if (ok) {
-          handleResponseSuccess("Tạo mã giảm giá thành công", () =>
-            onClose("create", true)
+          handleResponseSuccess(
+            "Cập nhật thông tin mã giảm giá thành công",
+            () => onClose("update", true)
           );
         }
         if (errors) {
           handleResponseError(errors);
         }
       },
-      [productId, handleResponseError, onClose, handleResponseSuccess]
+      [
+        productId,
+        handleResponseError,
+        onClose,
+        handleResponseSuccess,
+        promotion,
+      ]
     )
   );
 
   const handleClose = () => {
-    if (pendingCreate) return;
-    onClose("create", false);
+    if (pendingUpdate) return;
+    onClose("update", false);
   };
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!promotion) {
       form.resetFields();
       setError({ percent: false });
+    } else {
+      form.setFieldsValue({
+        name: promotion.name,
+        percent: promotion.percent,
+        status: promotion.status,
+        startDate: dayjs(promotion.startDate),
+        endDate: dayjs(promotion.endDate),
+      });
     }
-  }, [isOpen, form]);
+  }, [promotion, form]);
 
   return (
     <Modal
-      open={isOpen}
+      open={!!promotion}
       onCancel={handleClose}
       title={
         <div className="flex items-center justify-center w-full">
@@ -74,7 +92,7 @@ const CreatePromotionModal = ({ isOpen, onClose, productId }) => {
         form={form}
         layout="vertical"
         className="w-full m-0"
-        onFinish={createPromotion}
+        onFinish={updatePromotion}
       >
         <TextField
           name="name"
@@ -208,16 +226,19 @@ const CreatePromotionModal = ({ isOpen, onClose, productId }) => {
             variant="filled"
           />
         </Form.Item>
-        <SubmitButton text="Lưu" className="mt-2" loading={pendingCreate} />
+        <SubmitButton text="Lưu" className="mt-2" loading={pendingUpdate} />
       </Form>
     </Modal>
   );
 };
 
-CreatePromotionModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
+UpdatePromotionModal.propTypes = {
+  promotion: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.oneOf([null, undefined]),
+  ]),
   onClose: PropTypes.func.isRequired,
   productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-export default CreatePromotionModal;
+export default UpdatePromotionModal;

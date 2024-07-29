@@ -126,15 +126,6 @@ const IngredientManagement = () => {
                 onClick={() => setSelectedIngredientForUpdate(record)}
               />
             </Tooltip>
-            <Tooltip title="Nhập nguyên liệu" placement="right">
-              <Button
-                type="primary"
-                htmlType="button"
-                icon={<Plus size={20} />}
-                className="min-w-[44px] min-h-[44px]"
-                onClick={() => setSelectedIngredientForImport(record)}
-              />
-            </Tooltip>
           </div>
         ),
       },

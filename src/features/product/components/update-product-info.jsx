@@ -1,11 +1,15 @@
 import NumberField from "@/components/form/number-field";
 import SubmitButton from "@/components/form/submit-button";
 import TextField from "@/components/form/text-field";
-import { Form } from "antd";
+import { Form, Select } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-const UpdateProductInfo = ({ onSubmit, product = undefined }) => {
+const UpdateProductInfo = ({
+  onSubmit,
+  product = undefined,
+  categoryOptions,
+}) => {
   const [form] = Form.useForm();
   const [error, setError] = useState({ price: false });
 
@@ -19,6 +23,7 @@ const UpdateProductInfo = ({ onSubmit, product = undefined }) => {
     form.setFieldsValue({
       name: product?.name || "",
       price: product?.price || 0,
+      categoryId: product?.category?.id || 0,
     });
   }, [product, form]);
 
@@ -60,6 +65,23 @@ const UpdateProductInfo = ({ onSubmit, product = undefined }) => {
           isError={error.price}
           thousandSeparator=","
         />
+        <Form.Item
+          label={<span className="text-base font-exo-2">Danh mục</span>}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn danh mục",
+            },
+          ]}
+          name="categoryId"
+        >
+          <Select
+            options={categoryOptions}
+            placeholder="Chọn danh mục"
+            className="h-10"
+            variant="filled"
+          />
+        </Form.Item>
       </div>
       <div className="flex items-center justify-center w-full">
         <div className="w-1/3">
@@ -76,6 +98,7 @@ UpdateProductInfo.propTypes = {
     PropTypes.object,
     PropTypes.oneOf([undefined, null]),
   ]),
+  categoryOptions: PropTypes.array,
 };
 
 export default UpdateProductInfo;

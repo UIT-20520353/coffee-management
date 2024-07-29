@@ -8,6 +8,7 @@ import {
   Menu,
   Users,
   LandPlot,
+  CircleFadingPlus,
 } from "lucide-react";
 import { useMemo } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -47,6 +48,11 @@ const Sidebar = () => {
         label: "Sản phẩm",
         icon: <CupSoda width={24} height={24} />,
         link: "/products",
+      },
+      {
+        label: "Nhập hàng",
+        icon: <CircleFadingPlus width={24} height={24} />,
+        link: "/import",
       },
     ],
     []

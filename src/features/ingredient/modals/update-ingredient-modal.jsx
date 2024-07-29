@@ -14,7 +14,11 @@ const replaceCommaWithEmptyString = (inputString) => {
 
 const UpdateIngredientModal = ({ isOpen, onClose, ingredient }) => {
   const [form] = Form.useForm();
-  const [error, setError] = useState({ unit: false, warningLimits: false });
+  const [error, setError] = useState({
+    unit: false,
+    warningLimits: false,
+    quantity: false,
+  });
   const handleResponseError = useHandleResponseError();
 
   const onCreate = useCallback(
@@ -25,7 +29,7 @@ const UpdateIngredientModal = ({ isOpen, onClose, ingredient }) => {
           ...data,
           price: replaceCommaWithEmptyString(data.price),
           warningLimits: replaceCommaWithEmptyString(data.warningLimits),
-          quantity: ingredient.quantity,
+          quantity: replaceCommaWithEmptyString(data.quantity),
         }
       );
       if (ok) {
@@ -49,6 +53,7 @@ const UpdateIngredientModal = ({ isOpen, onClose, ingredient }) => {
     setError({
       warningLimits: form.getFieldError("warningLimits").length > 0,
       unit: form.getFieldError("price").length > 0,
+      quantity: form.getFieldError("quantity").length > 0,
     });
   }, [form]);
 
@@ -62,6 +67,7 @@ const UpdateIngredientModal = ({ isOpen, onClose, ingredient }) => {
         unit: ingredient.unit,
         price: ingredient.price,
         warningLimits: ingredient.warningLimits,
+        quantity: ingredient.quantity,
       });
     }
   }, [isOpen, form, ingredient]);
@@ -122,6 +128,18 @@ const UpdateIngredientModal = ({ isOpen, onClose, ingredient }) => {
             },
           ]}
           isError={error.unit}
+        />
+        <NumberField
+          name="quantity"
+          placeholder="Nhập số lượng"
+          label="Số lượng"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số lượng",
+            },
+          ]}
+          isError={error.quantity}
         />
         <NumberField
           name="warningLimits"

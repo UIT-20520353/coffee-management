@@ -1,36 +1,94 @@
 import Table from "@/components/table/table";
 import TableDataColumn from "@/components/table/table-data-column";
 import TableHeaderColumn from "@/components/table/table-header-column";
-import { Button } from "antd";
-import { Plus } from "lucide-react";
+import { StatusColorMapper, StatusMapper } from "@/mappers/promotion";
+import { Button, Tag } from "antd";
+import dayjs from "dayjs";
+import { Pencil, Plus } from "lucide-react";
 import PropTypes from "prop-types";
 import { useCallback, useMemo, useState } from "react";
 import CreatePromotionModal from "./create-promotion-modal";
+import UpdatePromotionModal from "./update-promotion-modal";
 
-const PromotionTable = ({ promotions }) => {
+const PromotionTable = ({ promotions, productId, getProductDetail }) => {
   const [isShowCreateModal, setShowCreateModal] = useState(false);
+  const [selectedPromotionForUpdate, setSelectedPromotionForUpdate] =
+    useState(undefined);
 
-  const onCloseModal = useCallback((type) => {
-    switch (type) {
-      case "create":
-        setShowCreateModal(false);
-        break;
-      default:
-        break;
-    }
-  }, []);
+  const onCloseModal = useCallback(
+    (type, reload) => {
+      switch (type) {
+        case "create":
+          setShowCreateModal(false);
+          break;
+        case "update":
+          setSelectedPromotionForUpdate(undefined);
+          break;
+        default:
+          break;
+      }
+
+      if (reload) {
+        getProductDetail(productId);
+      }
+    },
+    [getProductDetail, productId]
+  );
 
   const columns = useMemo(
     () => [
       {
-        dataIndex: "id",
-        title: <TableHeaderColumn label="ID" />,
-        render: (id) => <TableDataColumn label={id} />,
-      },
-      {
         dataIndex: "name",
         title: <TableHeaderColumn label="Tên sản phẩm" />,
         render: (name) => <TableDataColumn label={name} />,
+      },
+      {
+        dataIndex: "startDate",
+        title: <TableHeaderColumn label="Ngày bắt đầu" />,
+        render: (startDate) => (
+          <TableDataColumn
+            label={dayjs(startDate).format("DD/MM/YYYY HH:MM")}
+          />
+        ),
+      },
+      {
+        dataIndex: "endDate",
+        title: <TableHeaderColumn label="Ngày kết thúc" />,
+        render: (endDate) => (
+          <TableDataColumn label={dayjs(endDate).format("DD/MM/YYYY HH:MM")} />
+        ),
+      },
+      {
+        dataIndex: "percent",
+        title: <TableHeaderColumn label="Giảm giá" />,
+        render: (percent) => <TableDataColumn label={`${percent}%`} />,
+      },
+      {
+        dataIndex: "status",
+        title: <TableHeaderColumn label="Ngày kết thúc" />,
+        render: (status) => (
+          <Tag
+            bordered={false}
+            color={StatusColorMapper[status]}
+            className="text-sm font-exo-2"
+          >
+            {StatusMapper[status]}
+          </Tag>
+        ),
+      },
+      {
+        title: <TableHeaderColumn label="Thao tác" />,
+        render: (_, record) => (
+          <div className="flex items-center gap-2">
+            <Button
+              type="primary"
+              htmlType="button"
+              icon={<Pencil size={20} />}
+              className="min-w-[44px] min-h-[44px]"
+              onClick={() => setSelectedPromotionForUpdate(record)}
+            />
+          </div>
+        ),
       },
     ],
     []
@@ -60,13 +118,24 @@ const PromotionTable = ({ promotions }) => {
         isShowPagination={false}
       />
 
-      <CreatePromotionModal isOpen={isShowCreateModal} onClose={onCloseModal} />
+      <CreatePromotionModal
+        isOpen={isShowCreateModal}
+        onClose={onCloseModal}
+        productId={productId}
+      />
+      <UpdatePromotionModal
+        onClose={onCloseModal}
+        productId={productId}
+        promotion={selectedPromotionForUpdate}
+      />
     </div>
   );
 };
 
 PromotionTable.propTypes = {
   promotions: PropTypes.array.isRequired,
+  productId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  getProductDetail: PropTypes.func,
 };
 
 export default PromotionTable;

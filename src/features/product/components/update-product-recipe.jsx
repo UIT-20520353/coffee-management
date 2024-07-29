@@ -93,7 +93,7 @@ const UpdateProductRecipe = ({ product, ingredientOptions, onUpdate }) => {
                         message: "Vui lòng nhập số lượng",
                       },
                     ]}
-                    isError={error[`recipes${i}quantity`]}
+                    isError={error[`recipes${i}quantity`] ?? false}
                     thousandSeparator=","
                     className="col-span-5"
                   />

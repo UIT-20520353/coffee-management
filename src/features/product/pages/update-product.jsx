@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import UpdateProductInfo from "../components/update-product-info";
 import UpdateProductRecipe from "../components/update-product-recipe";
 import PromotionTable from "../components/promotion-table";
+import categoryApi from "@/api/categoryApi";
 
 const replaceCommaWithEmptyString = (inputString) => {
   return Number(inputString.toString().replace(/,/g, ""));
@@ -27,7 +28,16 @@ const UpdateProduct = () => {
 
   const [ingredients, setIngredients] = useState([]);
   const [product, setProduct] = useState(undefined);
+  const [categories, setCategories] = useState([]);
 
+  const categoryOptions = useMemo(
+    () =>
+      categories.map((category) => ({
+        label: category.name,
+        value: category.id,
+      })),
+    [categories]
+  );
   const ingredientOptions = useMemo(
     () =>
       ingredients.map((i) => ({
@@ -61,6 +71,18 @@ const UpdateProduct = () => {
       });
       if (ok && body) {
         setIngredients(body);
+      }
+    }, [])
+  );
+
+  const [pendingGetCategory, getAllCategories] = useHandleAsyncRequest(
+    useCallback(async () => {
+      const { ok, body } = await categoryApi.getAllCategories({
+        page: 0,
+        size: 9999,
+      });
+      if (ok && body) {
+        setCategories(body);
       }
     }, [])
   );
@@ -126,15 +148,16 @@ const UpdateProduct = () => {
       updateProductInfo({
         name: data.name,
         price: replaceCommaWithEmptyString(data.price),
-        categoryId: product.id,
+        categoryId: data.categoryId,
       });
     },
-    [updateProductInfo, product]
+    [updateProductInfo]
   );
 
   useEffect(() => {
     getAllIngredients();
-  }, [getAllIngredients]);
+    getAllCategories();
+  }, [getAllIngredients, getAllCategories]);
 
   useEffect(() => {
     if (!id) {
@@ -150,6 +173,7 @@ const UpdateProduct = () => {
     dispatch(
       pendingUpdateProductRecipe ? incrementLoading() : decrementLoading()
     );
+    dispatch(pendingGetCategory ? incrementLoading() : decrementLoading());
     dispatch(pendingGetProductDetail ? incrementLoading() : decrementLoading());
     dispatch(
       pendingUpdateProductInfo ? incrementLoading() : decrementLoading()
@@ -160,6 +184,7 @@ const UpdateProduct = () => {
     pendingUpdateProductRecipe,
     pendingGetProductDetail,
     pendingUpdateProductInfo,
+    pendingGetCategory,
   ]);
 
   return (
@@ -178,13 +203,21 @@ const UpdateProduct = () => {
         </div>
       </div>
 
-      <UpdateProductInfo product={product} onSubmit={onUpdateProductInfo} />
+      <UpdateProductInfo
+        product={product}
+        onSubmit={onUpdateProductInfo}
+        categoryOptions={categoryOptions}
+      />
       <UpdateProductRecipe
         product={product}
         ingredientOptions={ingredientOptions}
         onUpdate={onUpdateProductRecipe}
       />
-      <PromotionTable promotions={product?.promotions ?? []} />
+      <PromotionTable
+        promotions={product?.promotion ?? []}
+        productId={product?.id || -1}
+        getProductDetail={getProductDetail}
+      />
     </div>
   );
 };

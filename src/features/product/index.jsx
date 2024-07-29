@@ -102,11 +102,16 @@ const ProductManagement = () => {
         ),
       },
       {
-        dataIndex: "promotions",
+        dataIndex: "category",
+        title: <TableHeaderColumn label="Danh mục" />,
+        render: (category) => <TableDataColumn label={category.name} />,
+      },
+      {
+        dataIndex: "promotion",
         title: <TableHeaderColumn label="Số lượng mã giảm giá" />,
-        render: (promotions) => (
+        render: (promotion) => (
           <NumericFormat
-            value={promotions.length}
+            value={promotion.length}
             thousandSeparator=","
             displayType="text"
             className="font-exo-2"
