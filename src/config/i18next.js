@@ -9,6 +9,7 @@ i18n.use(initReactI18next).init({
       },
       error: {
         error: {
+          "access-denied": "Bạn không có quyền truy cập",
           area: {
             name: {
               "already-exist": "Tên khu vực đã tồn tại",

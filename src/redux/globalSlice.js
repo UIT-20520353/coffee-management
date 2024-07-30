@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   loading: 0,
   accessToken: undefined,
+  profile: undefined,
 };
 
 export const globalSlice = createSlice({
@@ -20,10 +21,17 @@ export const globalSlice = createSlice({
     setAccessToken: (state, action) => {
       state.accessToken = action.payload;
     },
+    setProfile: (state, action) => {
+      state.profile = action.payload;
+    },
   },
 });
 
-export const { incrementLoading, decrementLoading, setAccessToken } =
-  globalSlice.actions;
+export const {
+  incrementLoading,
+  decrementLoading,
+  setAccessToken,
+  setProfile,
+} = globalSlice.actions;
 
 export default globalSlice.reducer;

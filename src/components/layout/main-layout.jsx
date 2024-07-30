@@ -1,23 +1,60 @@
+import authApi from "@/api/authApi";
 import Header from "@/components/common/header";
 import Sidebar from "@/components/common/sidebar";
+import useHandleAsyncRequest from "@/hooks/useHandleAsyncRequest";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import {
+  decrementLoading,
+  incrementLoading,
+  setProfile,
+} from "@/redux/globalSlice";
 import { Loader } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
+import { ERole } from "@/enums/staff";
+import useHandleResponseError from "@/hooks/useHandleResponseError";
 
 const MainLayout = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { getLocalStorage } = useLocalStorage();
+  const { getLocalStorage, removeLocalStorage } = useLocalStorage();
+  const handleResponseError = useHandleResponseError();
   const { loading } = useSelector((state) => state.global);
+
+  const [pendingGetProfile, getProfile] = useHandleAsyncRequest(
+    useCallback(async () => {
+      const { ok, body, error } = await authApi.getProfile();
+      if (ok && body) {
+        if (body.role !== ERole.ADMIN) {
+          handleResponseError({ detail: "error.access-denied" }, () => {
+            removeLocalStorage();
+            navigate("/login");
+          });
+        } else dispatch(setProfile(body));
+      }
+
+      if (error) {
+        removeLocalStorage();
+        navigate("/login");
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [removeLocalStorage, dispatch, handleResponseError])
+  );
 
   useEffect(() => {
     const accessToken = getLocalStorage();
     if (!accessToken) {
       navigate("/login");
+    } else {
+      getProfile();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getLocalStorage]);
+  }, [getLocalStorage, getProfile]);
+
+  useEffect(() => {
+    dispatch(pendingGetProfile ? incrementLoading() : decrementLoading());
+  }, [pendingGetProfile, dispatch]);
 
   return (
     <div className="relative w-full">

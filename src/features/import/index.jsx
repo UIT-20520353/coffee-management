@@ -1,10 +1,9 @@
-import staffApi from "@/api/staffApi";
+import importApi from "@/api/importApi";
 import Table from "@/components/table/table";
 import TableDataColumn from "@/components/table/table-data-column";
 import TableHeaderColumn from "@/components/table/table-header-column";
 import useHandleAsyncRequest from "@/hooks/useHandleAsyncRequest";
-import { RoleMapper, StatusColorMapper, StatusMapper } from "@/mappers/staff";
-import { Button, Input, Tag } from "antd";
+import { Button } from "antd";
 import { Pencil, Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -16,19 +15,19 @@ const ImportManagement = () => {
   const [pagination, setPagination] = useState({
     page: 1,
   });
-  const [ingredientList, setIngredientList] = useState({ total: 0, items: [] });
+  const [importList, setImportList] = useState({ total: 0, items: [] });
 
   const onGet = useCallback(async (page) => {
-    const { ok, body, total } = await staffApi.getAllStaffs({
+    const { ok, body, total } = await importApi.getAllImports({
       size: 10,
       page: page - 1,
       sort: "id,asc",
     });
     if (ok && body) {
-      setIngredientList({ items: body, total: total ?? 0 });
+      setImportList({ items: body, total: total ?? 0 });
     }
   }, []);
-  const [pendingIngredients, getAllIngredients] = useHandleAsyncRequest(onGet);
+  const [pendingImportList, getAllImportList] = useHandleAsyncRequest(onGet);
 
   const onPageChange = useCallback((page) => {
     setPagination((prev) => ({ ...prev, page }));
@@ -42,50 +41,38 @@ const ImportManagement = () => {
         render: (id) => <TableDataColumn label={id} />,
       },
       {
-        dataIndex: "email",
-        title: <TableHeaderColumn label="Email" />,
-        render: (email) => <TableDataColumn label={email} />,
-      },
-      {
-        title: <TableHeaderColumn label="Họ tên" />,
-        render: (_, record) => (
-          <TableDataColumn label={`${record.firstName} ${record.lastName}`} />
+        dataIndex: "user",
+        title: <TableHeaderColumn label="Nhân viên nhập" />,
+        render: (user) => (
+          <TableDataColumn label={`${user.firstName} ${user.lastName}`} />
         ),
       },
       {
-        dataIndex: "phone",
-        title: <TableHeaderColumn label="Số điện thoại" />,
-        render: (phone) => <TableDataColumn label={phone} />,
-      },
-      {
-        dataIndex: "status",
-        title: <TableHeaderColumn label="Trạng thái" />,
-        render: (status) => (
-          <Tag
-            bordered={false}
-            color={StatusColorMapper[status]}
-            className="text-sm font-exo-2"
-          >
-            {StatusMapper[status]}
-          </Tag>
+        dataIndex: "importDetails",
+        title: <TableHeaderColumn label="Nguyên liệu" />,
+        render: (importDetails) => (
+          <TableDataColumn
+            label={
+              importDetails.length
+                ? importDetails.map((item) => item.ingredient.name).join(", ")
+                : "--"
+            }
+          />
         ),
+        width: "50%",
       },
       {
-        dataIndex: "salary",
-        title: <TableHeaderColumn label="Lương" />,
-        render: (salary) => (
+        dataIndex: "totalPrice",
+        title: <TableHeaderColumn label="Tổng tiền" />,
+        render: (totalPrice) => (
           <NumericFormat
-            value={salary}
+            value={totalPrice}
             thousandSeparator=","
             displayType="text"
             className="font-exo-2"
+            suffix="₫"
           />
         ),
-      },
-      {
-        dataIndex: "role",
-        title: <TableHeaderColumn label="Chức vụ" />,
-        render: (role) => <TableDataColumn label={RoleMapper[role]} />,
       },
       {
         title: <TableHeaderColumn label="Thao tác" />,
@@ -96,7 +83,7 @@ const ImportManagement = () => {
               htmlType="button"
               icon={<Pencil size={20} />}
               className="min-w-[44px] min-h-[44px]"
-              onClick={() => navigate(`/staffs/${record.id}`)}
+              onClick={() => navigate(`/import/${record.id}`)}
             />
           </div>
         ),
@@ -107,9 +94,9 @@ const ImportManagement = () => {
   );
 
   useEffect(() => {
-    getAllIngredients(pagination.page);
+    getAllImportList(pagination.page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination, getAllIngredients]);
+  }, [pagination, getAllImportList]);
 
   return (
     <div className="w-full p-5">
@@ -127,18 +114,18 @@ const ImportManagement = () => {
         </div>
       </div>
 
-      {/* <Table
+      <Table
         columns={columns}
-        loading={pendingIngredients}
-        data={ingredientList.items}
-        total={ingredientList.total}
+        loading={pendingImportList}
+        data={importList.items}
+        total={importList.total}
         onPageChange={onPageChange}
         page={pagination.page}
         rowClassName={(record) => {
           if (record.quantity === 0) return "row-danger";
           if (record.quantity < record.warningLimits) return "row-warning";
         }}
-      /> */}
+      />
     </div>
   );
 };

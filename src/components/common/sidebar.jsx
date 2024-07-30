@@ -1,66 +1,86 @@
+import { ERole } from "@/enums/staff";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import { setProfile } from "@/redux/globalSlice";
 import clsx from "clsx";
 import {
+  BadgeDollarSign,
   Blocks,
+  CircleFadingPlus,
   CupSoda,
-  House,
+  LandPlot,
   LogOut,
   Menu,
   Users,
-  LandPlot,
-  CircleFadingPlus,
 } from "lucide-react";
 import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { removeLocalStorage } = useLocalStorage();
+  const { profile } = useSelector((state) => state.global);
 
   const menus = useMemo(
-    () => [
-      {
-        label: "Trang chủ",
-        icon: <House width={24} height={24} />,
-        link: "/",
-      },
-      {
-        label: "Danh mục",
-        icon: <Menu width={24} height={24} />,
-        link: "/categories",
-      },
-      {
-        label: "Nguyên liệu",
-        icon: <Blocks width={24} height={24} />,
-        link: "/ingredients",
-      },
-      {
-        label: "Nhân viên",
-        icon: <Users width={24} height={24} />,
-        link: "/staffs",
-      },
-      {
-        label: "Khu vực",
-        icon: <LandPlot width={24} height={24} />,
-        link: "/areas",
-      },
-      {
-        label: "Sản phẩm",
-        icon: <CupSoda width={24} height={24} />,
-        link: "/products",
-      },
-      {
-        label: "Nhập hàng",
-        icon: <CircleFadingPlus width={24} height={24} />,
-        link: "/import",
-      },
-    ],
-    []
+    () =>
+      profile?.role === ERole.ADMIN
+        ? [
+            // {
+            //   label: "Trang chủ",
+            //   icon: <House width={24} height={24} />,
+            //   link: "/",
+            // },
+            {
+              label: "Danh mục",
+              icon: <Menu width={24} height={24} />,
+              link: "/",
+            },
+            {
+              label: "Nguyên liệu",
+              icon: <Blocks width={24} height={24} />,
+              link: "/ingredients",
+            },
+            {
+              label: "Nhân viên",
+              icon: <Users width={24} height={24} />,
+              link: "/staffs",
+            },
+            {
+              label: "Khu vực",
+              icon: <LandPlot width={24} height={24} />,
+              link: "/areas",
+            },
+            {
+              label: "Sản phẩm",
+              icon: <CupSoda width={24} height={24} />,
+              link: "/products",
+            },
+            {
+              label: "Nhập hàng",
+              icon: <CircleFadingPlus width={24} height={24} />,
+              link: "/import",
+            },
+            {
+              label: "Đơn hàng",
+              icon: <BadgeDollarSign width={24} height={24} />,
+              link: "/orders",
+            },
+          ]
+        : [
+            {
+              label: "Nhập hàng",
+              icon: <CircleFadingPlus width={24} height={24} />,
+              link: "/import",
+            },
+          ],
+    [profile]
   );
 
   const onLogout = () => {
     removeLocalStorage();
     navigate("/login");
+    dispatch(setProfile(undefined));
   };
 
   return (

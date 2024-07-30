@@ -12,6 +12,9 @@ const ingredientApi = {
       axiosClient.post(`/admin/ingredient/update/${id}`, data)
     );
   },
+  importIngredient: (data) => {
+    return handleResponse(axiosClient.post("/admin/import", data));
+  },
 };
 
 export default ingredientApi;
