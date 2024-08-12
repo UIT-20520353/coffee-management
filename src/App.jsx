@@ -2,6 +2,7 @@ import MainLayout from "@/components/layout/main-layout";
 import AreaManagement from "@/features/area";
 import AreaDetail from "@/features/area/pages/area-detail";
 import CategoryManagement from "@/features/category";
+import Dashboard from "@/features/dashboard";
 import ImportManagement from "@/features/import";
 import CreateImport from "@/features/import/pages/create-import";
 import UpdateImport from "@/features/import/pages/update-import";
@@ -25,7 +26,7 @@ const App = () => {
       <Route path="/" element={<MainLayout />}>
         <Route path="ingredients" element={<IngredientManagement />} />
         <Route path="inventory" element={<InventoryManagement />} />
-        <Route index element={<CategoryManagement />} />
+        <Route path="categories" element={<CategoryManagement />} />
         <Route path="staffs/create" element={<CreateStaff />} />
         <Route path="staffs/:id" element={<EditStaff />} />
         <Route path="staffs" element={<StaffManagement />} />
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="import" element={<ImportManagement />} />
         <Route path="orders/:id" element={<OrderDetail />} />
         <Route path="orders" element={<OrderManagement />} />
+        <Route index element={<Dashboard />} />
       </Route>
     </Routes>
   );

@@ -7,6 +7,7 @@ import {
   Blocks,
   CircleFadingPlus,
   CupSoda,
+  House,
   LandPlot,
   LogOut,
   Menu,
@@ -26,15 +27,15 @@ const Sidebar = () => {
     () =>
       profile?.role === ERole.ADMIN
         ? [
-            // {
-            //   label: "Trang chủ",
-            //   icon: <House width={24} height={24} />,
-            //   link: "/",
-            // },
+            {
+              label: "Trang chủ",
+              icon: <House width={24} height={24} />,
+              link: "/",
+            },
             {
               label: "Danh mục",
               icon: <Menu width={24} height={24} />,
-              link: "/",
+              link: "/categories",
             },
             {
               label: "Nguyên liệu",
