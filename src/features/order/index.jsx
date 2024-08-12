@@ -154,7 +154,7 @@ const OrderManagement = () => {
           />
         </div>
         <div className="flex flex-col items-start col-span-1 gap-2">
-          <span>Họ tên</span>
+          <span>Ngày kết thúc</span>
           <DatePicker
             className="w-full h-10 text-base"
             minDate={filter.startDate || dayjs()}

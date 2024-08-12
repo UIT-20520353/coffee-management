@@ -16,6 +16,7 @@
     "axios": "^1.7.2",
     "bignumber.js": "^9.1.2",
     "clsx": "^2.1.1",
+    "date-format": "^4.0.14",
     "i18next": "^23.11.5",
     "lucide-react": "^0.400.0",
     "prop-types": "^15.8.1",
